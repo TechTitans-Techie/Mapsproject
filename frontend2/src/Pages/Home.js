@@ -3,17 +3,21 @@ import { useNavigate } from 'react-router-dom';
 import Header from './../Components/Header'
 import Box from '@mui/material/Box/Box';
 import Toolbar from '@mui/material/Toolbar';
-import { TextField, FormControlLabel, Checkbox, Button, FormControl, InputLabel, NativeSelect } from '@mui/material'
+import { TextField, FormControlLabel, Checkbox, Button, FormControl, InputLabel, NativeSelect, Select, MenuItem } from '@mui/material'
 import Typography from '@mui/material/Typography/Typography';
 import bg from './../car_bg.jpg'
 
 function Home() {
     const userToken = localStorage.getItem('authtoken');
     const navigate = useNavigate();
+    const [distance, setDistance] = useState("")
     const [state, setstate] = useState("")
-    const [mode, setMode] = useState("Driving")
+    const [mode, setMode] = useState("DRIVING")
     const [destination, setdestination] = useState("");
-    const [details, setDetails] = useState({})
+    const [duration, setDuration] = useState("")
+    const [car, setCar] = useState("")
+    const [cars, setCars] = useState([])
+
 
     useEffect(() => {
         const input = document.getElementById("from");
@@ -69,15 +73,15 @@ function Home() {
 
         };
         var map = new window.google.maps.Map(document.getElementById('googleMap'), mapOptions);
-        
+
         var directionsService = new window.google.maps.DirectionsService();
         var directionsDisplay = new window.google.maps.DirectionsRenderer();
+        console.log(mode)
 
-        
         var request = {
             origin: state.value,
             destination: destination.value,
-            travelMode: window.google.maps.TravelMode.DRIVING, //WALKING, BYCYCLING, TRANSIT
+            travelMode: window.google.maps.TravelMode[mode], //WALKING, BYCYCLING, TRANSIT
             unitSystem: window.google.maps.UnitSystem.IMPERIAL
         }
 
@@ -86,10 +90,13 @@ function Home() {
                 console.log("success")
                 directionsDisplay.setDirections(result);
                 directionsDisplay.setMap(map);
-          //  distance = result.routes[0].legs[0].distance.text
+                setDistance(result.routes[0].legs[0].distance.text)
+                setDuration(result.routes[0].legs[0].duration.text)
+                //  distance = result.routes[0].legs[0].distance.text
             }
             else {
-                console.log("failed")
+                directionsDisplay.setDirections({ routes: [] });
+                map.setCenter(myLatLng);
             }
         })
     }
@@ -97,7 +104,6 @@ function Home() {
     const handleChange = (event) => setstate({ value: event.target.value })
     const handleDestinationChanage = (event) => setdestination({ value: event.target.value })
     const scollToRef = useRef();
-    const center = useMemo(() => ({ lat: 18.52043, lng: 73.856743 }), []);
 
 
     React.useEffect(() => {
@@ -110,11 +116,6 @@ function Home() {
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        setDetails({
-            from: state,
-            to: destination,
-            mode: mode
-        })
 
         setloading(true)
         scollToRef.current.scrollIntoView()
@@ -224,10 +225,11 @@ function Home() {
                                     }}
                                     onChange={(event) => { setMode(event.target.value) }}
 
+
                                 >
-                                    <option value={"Driving"}>Driving</option>
-                                    <option value={"Walking"}>Walking</option>
-                                    <option value={"Transist"}>Public Transport</option>
+                                    <option value={"DRIVING"}>Driving</option>
+                                    <option value={"WALKING"}>Walking</option>
+                                    <option value={"TRANSIT"}>Public Transport</option>
                                 </NativeSelect>
                             </FormControl>
 
@@ -245,11 +247,47 @@ function Home() {
                 </div>
                 <div className="container-fluid">
                     <div id="googleMap" ref={scollToRef}>
-
-
-
                     </div>
                 </div>
+
+                {
+                    distance !== "" && duration !== "" &&
+                    <div
+                        style={{ width: "100%", alignItems: "center", margin: "auto", textAlign: "center" }}
+                    >
+                        <Box sx={{ minWidth: 120 }}>
+                            <FormControl sx={{ m: 1, minWidth: 120 }}>
+                                <InputLabel id="demo-simple-select-label">Select Car</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    value={car}
+                                    label="Car"
+                                    onChange={(event) => setCar(event.target.value)}
+                                    variant='standard'
+                                >
+                                    <MenuItem value={10}>Ten</MenuItem>
+                                    <MenuItem value={20}>Twenty</MenuItem>
+                                    <MenuItem value={30}>Thirty</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Box>
+                        <table style={{ border: "1px solid black", marginTop: "10px", width: "100%" }}>
+                            <tr>
+                                <th>
+                                    <td style={{width: "50%"}}>Distance: </td>
+                                    <td>{distance}</td>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <td>Duration: </td>
+                                    <td>{duration}</td>
+                                </th>
+                            </tr>
+                        </table>
+                    </div>
+                }
             </Box>
         </Box>
     )
