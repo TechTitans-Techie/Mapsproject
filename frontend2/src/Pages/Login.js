@@ -31,21 +31,26 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignInSide() {
+    const [loading, setloading] = React.useState(false)
+    const [errorMessage, seterrorMessage] = React.useState("")
     const navigate=useNavigate()
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const email=data.get('email')
     const password=data.get('password')
-    
+    setloading(true)
     axios.post('auth/login',{
         email,password
     })
     .then(res=>{
-        navigate('/home')
+        localStorage.setItem('authtoken',res.data.token)
+        navigate('/')
     })
     .catch(err=>{
         console.log(err)
+        setloading(false)
+        seterrorMessage("failed to login")
     })
 
   };
@@ -109,11 +114,13 @@ export default function SignInSide() {
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
               />
+              <span>{errorMessage}</span>
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
+                disabled={loading}
               >
                 Sign In
               </Button>

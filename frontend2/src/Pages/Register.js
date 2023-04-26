@@ -29,13 +29,26 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignInSide() {
+    const [loading, setloading] = React.useState(false)
+    const [errorMessage, seterrorMessage] = React.useState("")
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    const email=data.get('email')
+    const password=data.get('password')
+    setloading(true)
+    axios.post('auth/register',{
+        email,password
+    })
+    .then(res=>{
+        
+        navigate('/login')
+    })
+    .catch(err=>{
+        console.log(err)
+        setloading(false)
+        seterrorMessage("failed to Register")
+    })
   };
 
   return (
@@ -102,13 +115,14 @@ export default function SignInSide() {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
+                disabled={loading}
               >
                 Sign In
               </Button>
               <Grid container>
                 
                 <Grid item>
-                  <Link href="/" variant="body2">
+                  <Link href="/login" variant="body2">
                     {"Already have a Account? Login"}
                   </Link>
                 </Grid>
