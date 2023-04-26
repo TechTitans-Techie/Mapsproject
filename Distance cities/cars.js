@@ -1,7 +1,7 @@
 var make = ['toyota','audi','nissan','ford','dodge']  
 var list_cars = []
 var dict_list = []
-const select_start_text = "<select name ='cars' id='cars'>"
+const select_start_text = "<select name ='cars' id='cars' class='form-control'>"
 let optionValue = "<option>Please select Car</option>";
 for(var i=0;i<make.length;i++){
     $.ajax({
@@ -31,7 +31,7 @@ const myTimeout = setTimeout(loadSelectTag, 7000);
 function loadSelectTag(){
     let optionValues = removeDuplicates(optionValue)
     console.log(optionValues)
-    let submit_text = "<br><br><button id='carsubmit' onclick='calcMilage(dict_list,input1);'>Submit</button>"
+    let submit_text = "<br><br><button id='carsubmit' onclick='calcMilage(dict_list,input1);'>Check price</button>"
     cars_container.innerHTML = select_start_text + optionValues + select_end_text + submit_text;
     //alert(document.getElementById("cars").value)
 }
