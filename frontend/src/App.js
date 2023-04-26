@@ -4,6 +4,7 @@ import Register from './Pages/Register'
 import {BrowserRouter,Route,Routes} from 'react-router-dom'
 import Home from '../../frontend2/src/Pages/Home'
 
+
 function App() {
   return (
     <BrowserRouter>

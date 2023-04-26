@@ -12,7 +12,6 @@ var mapOptions = {
 //create map
 var map = new google.maps.Map(document.getElementById('googleMap'), mapOptions);
 
-console.log("Iam calling here........................")
 //create a DirectionsService object to use the route method and get a result for our request
 var directionsService = new google.maps.DirectionsService();
 
