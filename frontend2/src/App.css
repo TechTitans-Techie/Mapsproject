@@ -13,6 +13,12 @@
   }
 }
 
+#googleMap {
+  width: 80%;
+  height: 400px;
+  margin: 10px auto;
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;

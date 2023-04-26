@@ -1,65 +1,104 @@
-import React from 'react'
+import React, { useState, useEffect, useRef, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom';
 import Header from './../Components/Header'
 import Box from '@mui/material/Box/Box';
 import Toolbar from '@mui/material/Toolbar';
-import { TextField, FormControlLabel, Checkbox, Button, FormControl,InputLabel,NativeSelect } from '@mui/material'
+import { TextField, FormControlLabel, Checkbox, Button, FormControl, InputLabel, NativeSelect } from '@mui/material'
 import Typography from '@mui/material/Typography/Typography';
 import bg from './../car_bg.jpg'
-
-
-let autoComplete;
-
-const loadScript = (url, callback) => {
-  let script = document.createElement("script");
-  script.type = "text/javascript";
-
-  if (script.readyState) {
-    script.onreadystatechange = function () {
-      if (script.readyState === "loaded" || script.readyState === "complete") {
-        script.onreadystatechange = null;
-        callback();
-      }
-    };
-  } else {
-    script.onload = () => callback();
-  }
-
-  script.src = url;
-  document.getElementsByTagName("head")[0].appendChild(script);
-};
-
-function handleScriptLoad(updateQuery, autoCompleteRef) {
-  autoComplete = new window.google.maps.places.Autocomplete(
-    autoCompleteRef.current,
-    { types: ["(cities)"], componentRestrictions: { country: "ind" } }
-  );
-  autoComplete.setFields(["address_components", "formatted_address"]);
-  autoComplete.addListener("place_changed", () =>
-    handlePlaceSelect(updateQuery)
-  );
-}
-
-async function handlePlaceSelect(updateQuery) {
-  const addressObject = autoComplete.getPlace();
-  const query = addressObject.formatted_address;
-  updateQuery(query);
-  console.log(addressObject);
-}
 
 function Home() {
     const userToken = localStorage.getItem('authtoken');
     const navigate = useNavigate();
+    const [state, setstate] = useState("")
+    const [mode, setMode] = useState("Driving")
+    const [destination, setdestination] = useState("");
+    const [details, setDetails] = useState({})
 
-    const [query, setQuery] = React.useState("");
-  const autoCompleteRef = React.useRef(null);
+    useEffect(() => {
+        const input = document.getElementById("from");
+        const options = {
+            types: ["(cities)"],
+        };
+        const geoAutocomplete = new window.google.maps.places.Autocomplete(input, options);
+        geoAutocomplete.addListener("place_changed", () => {
+            const selectedPlace = geoAutocomplete.getPlace();
+            console.log(selectedPlace);
+            setstate({ value: selectedPlace.formatted_address });
+        });
+    }, []);
 
-    React.useEffect(() => {
-        loadScript(
-          `https://maps.googleapis.com/maps/api/js?key=AIzaSyByW_Aub5_HWF95VhImjC-ayxQNU8pPH8s&libraries=places`,
-          () => handleScriptLoad(setQuery, autoCompleteRef)
-        );
-      }, []);
+    useEffect(() => {
+        const input = document.getElementById("to");
+        const options = {
+            types: ["(cities)"],
+        };
+        const geoAutocomplete = new window.google.maps.places.Autocomplete(input, options);
+        geoAutocomplete.addListener("place_changed", () => {
+            const selectedPlace = geoAutocomplete.getPlace();
+            console.log(selectedPlace);
+            setdestination({ value: selectedPlace.formatted_address });
+        });
+    }, []);
+
+    useEffect(() => {
+        var myLatLng = { lat: 38.3460, lng: -0.4907 };
+        var mapOptions = {
+            center: myLatLng,
+            zoom: 7,
+            mapTypeId: window.google.maps.MapTypeId.ROADMAP
+
+        };
+        var map = new window.google.maps.Map(document.getElementById('googleMap'), mapOptions);
+        // var directionsService = new window.google.maps.DirectionsService();
+
+        //create a DirectionsRenderer object which we will use to display the route
+        var directionsDisplay = new window.google.maps.DirectionsRenderer();
+
+        //bind the DirectionsRenderer to the map
+        directionsDisplay.setMap(map);
+    }, [])
+
+    const calcRoute = () => {
+
+        var myLatLng = { lat: 38.3460, lng: -0.4907 };
+        var mapOptions = {
+            center: myLatLng,
+            zoom: 7,
+            mapTypeId: window.google.maps.MapTypeId.ROADMAP
+
+        };
+        var map = new window.google.maps.Map(document.getElementById('googleMap'), mapOptions);
+        
+        var directionsService = new window.google.maps.DirectionsService();
+        var directionsDisplay = new window.google.maps.DirectionsRenderer();
+
+        
+        var request = {
+            origin: state.value,
+            destination: destination.value,
+            travelMode: window.google.maps.TravelMode.DRIVING, //WALKING, BYCYCLING, TRANSIT
+            unitSystem: window.google.maps.UnitSystem.IMPERIAL
+        }
+
+        directionsService.route(request, function (result, status) {
+            if (status == window.google.maps.DirectionsStatus.OK) {
+                console.log("success")
+                directionsDisplay.setDirections(result);
+                directionsDisplay.setMap(map);
+          //  distance = result.routes[0].legs[0].distance.text
+            }
+            else {
+                console.log("failed")
+            }
+        })
+    }
+
+    const handleChange = (event) => setstate({ value: event.target.value })
+    const handleDestinationChanage = (event) => setdestination({ value: event.target.value })
+    const scollToRef = useRef();
+    const center = useMemo(() => ({ lat: 18.52043, lng: 73.856743 }), []);
+
 
     React.useEffect(() => {
 
@@ -71,20 +110,15 @@ function Home() {
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        const email = data.get('email')
-        const password = data.get('password')
+        setDetails({
+            from: state,
+            to: destination,
+            mode: mode
+        })
 
         setloading(true)
-
-            .then(res => {
-                localStorage.setItem('authtoken', res.data.token)
-                navigate('/')
-            })
-            .catch(err => {
-                console.log(err)
-                setloading(false)
-
-            })
+        scollToRef.current.scrollIntoView()
+        calcRoute()
 
     };
 
@@ -153,29 +187,32 @@ function Home() {
                                 label="Origin"
                                 name="origin"
                                 variant='standard'
+                                value={state.value}
                                 autoFocus
-                               inputRef={autoCompleteRef}
-                                ref={autoCompleteRef}
-                                onChange={(event) => setQuery(event.target.value)}
-                                value={query}
+
+                                onChange={handleChange}
                                 autoComplete="off"
                             />
                             <TextField
                                 margin="normal"
                                 required
-                                fullWidth  
+                                fullWidth
                                 id="to"
                                 name="destination"
                                 label="Destination"
                                 type="text"
                                 variant='standard'
-                                autoComplete="destination"
+                                autoComplete="off"
+                                value={destination.value}
+
+
+                                onChange={handleDestinationChanage}
                             />
-                                <FormControl fullWidth
-                                style={{marginTop: '10px'}}
+                            <FormControl fullWidth
+                                style={{ marginTop: '10px' }}
                             >
                                 <InputLabel variant="standard" htmlFor="uncontrolled-native"
-                                    
+
                                 >
                                     Select Mode
                                 </InputLabel>
@@ -185,6 +222,8 @@ function Home() {
                                         name: 'age',
                                         id: 'uncontrolled-native',
                                     }}
+                                    onChange={(event) => { setMode(event.target.value) }}
+
                                 >
                                     <option value={"Driving"}>Driving</option>
                                     <option value={"Walking"}>Walking</option>
@@ -199,16 +238,18 @@ function Home() {
                                 sx={{ mt: 3, mb: 2 }}
                                 disabled={loading}
                             >
-                                <i class="fas fa-map-signs"></i> &nbsp; RIDE
+                                <i className="fas fa-map-signs"></i> &nbsp; RIDE
                             </Button>
                         </Box>
                     </div>
                 </div>
-                <div class="container-fluid">
-            <div id="googleMap">
+                <div className="container-fluid">
+                    <div id="googleMap" ref={scollToRef}>
 
-            </div>
-        </div>
+
+
+                    </div>
+                </div>
             </Box>
         </Box>
     )
