@@ -10,12 +10,41 @@
     <link href="App.css" rel="stylesheet" />
 </head>
 <body>
-  
+    <nav class="navbar navbar-expand-custom navbar-mainbg">
+        <!-- <a class="navbar-brand navbar-logo" href="#"><img src="https://freepnglogos.net/assets/uploads/2023/04/HTML5-Logo-png.png" width="60px"></a> -->
+        <button class="navbar-toggler" type="button" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fas fa-bars text-white"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                <!-- <div class="hori-selector"><div class="left"></div><div class="right"></div></div> -->
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0);"><i class=""></i>Home</a>
+                </li>
+                <!-- <li class="nav-item active">
+                    <a class="nav-link" href="javascript:void(0);"><i class="far fa-address-book"></i>Address Book</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0);"><i class="far fa-clone"></i>Components</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0);"><i class="far fa-calendar-alt"></i>Calendar</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0);"><i class="far fa-chart-bar"></i>Charts</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0);"><i class="far fa-copy"></i>Documents</a>
+                </li> -->
+            </ul>
+            
+        </div>
+    </nav>
     <div class="jumbotron">
         <div class="container-fluid">
             <h1>Ride with US</h1>
-            <p>THis app provides users with the most fuel and time-efficient mode of 
-                transport when traveling from one location to another</p>
+            <!--<p>THis app provides users with the most fuel and time-efficient mode of 
+                transport when traveling from one location to another</p> -->
             <form class="form-horizontal">
                 <div class="form-group">
                     <label for="from" class="col-xs-2 control-label"><i class="far fa-dot-circle"></i></label>
@@ -34,7 +63,7 @@
 
                  <div class="form-group">
                 
-                    <label for="mode" class="col-xs-2 control-label"><i class="fas fa-map-marker-alt"></i></label>
+                    <label for="mode" class="col-xs-2 control-label"><i class=""></i></label>
                     <div class="col-xs-4">
                         <select name="mode" id="mode" class="form-control">
                             <option>Please select mode</option>
@@ -43,7 +72,8 @@
                             <option name="Transist">Public Transport</option>
                         </select>
                     </div>
-                  
+                    
+                    
                  </div>
                  
             </form>
@@ -54,39 +84,36 @@
         </div>
         <div class="container-fluid">
             <div id="googleMap"></div>
-            <div class="FromAndTo" id="FromAndTo"></div>
-            <div class="Row" id="row" style="display: none;">
-                <div class="Column" id="output"></div>
-                <div class="Column" id="output1"></div>
-                <div class="Column" id="output2"></div>
-                <div class="Column" id="cars-container"></div>
-            </div>
-
-            <div class="final_display" id="final_display">
-
-            </div>
-            <div class="contentPart css-b4hkzl"><h2 id="what-is-the-best-way-to-take-a-road-trip-on-a-small-budget">What is the best way to take a road trip on a small budget?</h2>
-                <div class="textBlock"><p>If you are planning a road trip for your vacation, but your budget is relatively small, <strong>here are a few things you can do:</strong></p>
-                <ul>
-                <li><strong>Go during the offseason.</strong> Vacation rentals cost less in the offseason. This price reduction is because the demand for these places is relatively low during the off-season. So owners and agents reduce the price to attract more visitors.</li>
-                <li><strong>Take a road trip with others willing to share the cost.</strong> Sharing the cost will reduce your individual payment. For instance, if the fuel price for the trip is $1000, you will pay less by splitting that cost five ways between friends. You can do this using our calculator above.</li>
-                <li><strong>Try camping to reduce the cost of accommodation.</strong> Campsites cost less than the average hotel.</li>
-                <li><strong>Research fun, entertaining activities that you and your friends can do free of cost or for a small fee.</strong> For example, use a map to explore with your team rather than hiring a tour guide.</li>
-                <li><strong>Pack food that you can quickly fix on the go rather than eating in restaurants.</strong> The cost of food can eat into your vacation money. As such, finding ways to eat for less can make the difference in the amount and type of activities you will be able to engage in.</li>
-                </ul></div></div>
         </div>
+        <div>
+            <div class="FromAndTo" id="FromAndTo"></div>
+                <div class="Row" id="row" style="display: none;">
+                    <div class="Column" id="output"></div>
+                    <div class="Column" id="output1"></div>
+                    <div class="Column" id="output2"></div>
+                </div>
+            <div class="col-xs-4" id="cars-container" style="display: none; background-color: #2572a9;"></div>
+            <div class="final_display" id="final_display"></div>
+            <div id="myModal" class="modal">
 
-        
-
-    </div>
+                <!-- Modal content -->
+                <div class="modal-content">
+                  <span class="close">&times;</span>
+                    <p id="final_text"></p>
+                </div>
+              
+              </div>
+        </div>
+    
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQPfnijWIRh57wnshZcnuotkGqSe_O_u4&libraries=places"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyByW_Aub5_HWF95VhImjC-ayxQNU8pPH8s&libraries=places"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="Scripts/jquery-3.1.1.min.js"></script>
     <script src="Main.js"></script>
     <script src="cars.js"></script>
     <script src="fuels.js"></script>
+    <script src="uber.js"></script>
 </body>
 </html>

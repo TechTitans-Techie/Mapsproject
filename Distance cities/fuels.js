@@ -20,7 +20,7 @@ function callFuels(state){
 
 function calcMilage(carMileage_list,userOrigin){
     userCar = document.getElementById('cars').value;
-    //alert(userCar)
+    
     let userCarMileage;
     userOrigin = userOrigin.value;
     for(var i =0;i<carMileage_list.length;i++){
@@ -34,6 +34,7 @@ function calcMilage(carMileage_list,userOrigin){
             break;
         }
     }
+    
     let fuelPrice = getFuelPrice();
     // setTimeout(() =>{
     //     fuelPrice = getCity(areaFuelPriceList,city);
@@ -43,14 +44,44 @@ function calcMilage(carMileage_list,userOrigin){
     distance = parseInt(distance)
     fuelPrice = parseInt(fuelPrice)
     userCarMileage = parseInt(userCarMileage)
+    //alert(distance +" "+ fuelPrice +" "+ userCarMileage);
     let fuel = distance / userCarMileage;
     fuel = Math.round(fuel * 100) / 100
     let trip_cost = fuel * fuelPrice
     trip_cost = Math.round(trip_cost * 100) / 100;
     //alert(Math.round(trip_cost * 100) / 100)
-    var final_display = document.querySelector("#final_display");
+    var final_display = document.getElementById("final_display");
+    //alert("display")
     final_display.innerHTML = "<p>The user selects "+userCar.toUpperCase()+" which has a combination mileage of "+userCarMileage+". <br>. The distance user wants to travel "+distance+"mi. So the total fuel, the user needs to cover the given distance is distance / mileage ="+fuel+".</p>";
     final_display.innerHTML = final_display.innerHTML+ "<p>Hence the trip cost would be fuel required * fuel price in the origin = $"+trip_cost+"</p>";
+
+    // var modal = document.getElementById("myModal");
+
+    // // Get the button that opens the modal
+    // var btn = document.getElementById("carsubmit");
+
+    // // Get the <span> element that closes the modal
+    // var span = document.getElementsByClassName("close")[0];
+
+    // // When the user clicks the button, open the modal 
+    // btn.onclick = function() {
+    // modal.style.display = "block";
+    // }
+
+    // // When the user clicks on <span> (x), close the modal
+    // span.onclick = function() {
+    //      modal.style.display = "none";
+    // }
+    // var final_text = document.getElementById("final_text")
+    // final_text.innerHTML ="<p>The user selects "+userCar.toUpperCase()+" which has a combination mileage of "+userCarMileage+". <br>. The distance user wants to travel "+distance+"mi. So the total fuel, the user needs to cover the given distance is distance / mileage ="+fuel+".</p>";
+    // final_text.innerHTML = final_text.innerHTML+ "<p>Hence the trip cost would be fuel required * fuel price in the origin = $"+trip_cost+"</p>";
+    // // When the user clicks anywhere outside of the modal, close it
+    // window.onclick = function(event) {
+    //     if (event.target == modal) {
+    //         modal.style.display = "none";
+    //         final_text.innerHTML = '';
+    //     }
+    // }
 
 }
 

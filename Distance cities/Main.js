@@ -37,7 +37,7 @@ function calcRoute() {
 
             //Get distance and time
             const output = document.querySelector('#output');
-            output.innerHTML = "<div class='alert-info'>From: " + document.getElementById("from").value + ".<br />To: " + document.getElementById("to").value+"</div><div class='alert-info'> Driving distance <i class='fas fa-road'></i> : <p id='miles'>" + result.routes[0].legs[0].distance.text + "</p>Duration <i class='fas fa-hourglass-start'></i> : " + result.routes[0].legs[0].duration.text + ".</div>";
+            output.innerHTML = "<div class='drive'>From: " + document.getElementById("from").value + ".<br />To: " + document.getElementById("to").value+"</div><div class='drive'> Driving distance <i class='fas fa-road'></i> : <p id='miles'>" + result.routes[0].legs[0].distance.text + "</p>Duration <i class='fas fa-hourglass-start'></i> : " + result.routes[0].legs[0].duration.text + ".</div>";
             directionsDisplay.setDirections(result);
             distance = result.routes[0].legs[0].distance.text
         } else {
@@ -61,7 +61,7 @@ function calcWalkingDistance(){
     directionsService.route(request, function (result, status) {
         if (status == google.maps.DirectionsStatus.OK) {
             const output1 = document.querySelector('#output1');
-            output1.innerHTML = "<div class='alert-info'>From: " + document.getElementById("from").value + ".<br />To: " + document.getElementById("to").value+"</div><div class='alert-info'>Walking distance <i class='fas fa-road'></i> : " + result.routes[0].legs[0].distance.text + ".<br/>Duration <i class='fas fa-hourglass-start'></i> : " + result.routes[0].legs[0].duration.text + ".</div>";
+            output1.innerHTML = "<div class='walk'>From: " + document.getElementById("from").value + ".<br />To: " + document.getElementById("to").value+"</div><div class='walk'>Walking distance <i class='fas fa-road'></i> : " + result.routes[0].legs[0].distance.text + ".<br/>Duration <i class='fas fa-hourglass-start'></i> : " + result.routes[0].legs[0].duration.text + ".</div>";
             directionsDisplay.setDirections(result);
             distance = result.routes[0].legs[0].distance.text
         } else {
@@ -83,7 +83,7 @@ function calcTransist(){
     directionsService.route(request2, function (result2, status) {
         if (status == google.maps.DirectionsStatus.OK) {
             const output2 = document.querySelector('#output2');
-            output2.innerHTML = "<div class='alert-info'>From: " + document.getElementById("from").value + ".<br />To: " + document.getElementById("to").value+"</div><div class='alert-info'>"+"Transist distance <i class='fas fa-road'></i> : " + result2.routes[0].legs[0].distance.text + ".<br />Duration <i class='fas fa-hourglass-start'></i> : " + result2.routes[0].legs[0].duration.text + ".</div>";
+            output2.innerHTML = "<div class='transist'>From: " + document.getElementById("from").value + ".<br />To: " + document.getElementById("to").value+"</div><div class='transist'>"+"Transist distance <i class='fas fa-road'></i> : " + result2.routes[0].legs[0].distance.text + ".<br />Duration <i class='fas fa-hourglass-start'></i> : " + result2.routes[0].legs[0].duration.text + ".</div>";
             directionsDisplay.setDirections(result2);
             distance = result2.routes[0].legs[0].distance.text
         } else {
@@ -128,12 +128,12 @@ function checkRide(option){
         //AddFromTo();
         calcTransist();
     }
-    if(option == "Own car"){
-        document.getElementById("output1").style.display = 'none';
-        document.getElementById("output").style.display = 'none';
-        document.getElementById("output2").style.display = 'none';
-        document.getElementById("cars-container").style.display='block';
-    }
+    // if(option == "Own car"){
+    //     document.getElementById("output1").style.display = 'none';
+    //     document.getElementById("output").style.display = 'none';
+    //     document.getElementById("output2").style.display = 'none';
+    //     document.getElementById("cars-container").style.display='block';
+    // }
 
 }
 
